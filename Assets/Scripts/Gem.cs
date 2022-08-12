@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 [RequireComponent(typeof(Collider2D))]
 
-public class GemManager : MonoBehaviour
+public class Gem : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D collision)
     {
