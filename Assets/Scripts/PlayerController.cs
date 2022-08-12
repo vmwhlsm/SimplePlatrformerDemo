@@ -14,8 +14,7 @@ public class PlayerController : MonoBehaviour
     private const string _jump = "space";
     private const string JumpTrigger = "Jump";
     private const string RunBool = "Run";
-    private bool _isMoveDirectionRight;
-    private bool _isMoveDirectionLeft;
+    private Vector2 _moveVector;
     private Rigidbody2D _rb2d;
     private float _speed = 0.25f;
     private float _jumpSpeed = 10f;
@@ -28,12 +27,19 @@ public class PlayerController : MonoBehaviour
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _animator = GetComponent<Animator>();
         _rb2d = GetComponent<Rigidbody2D>();
-        StartCoroutine(ManageActions());
+    }
+
+    private void Update()
+    {
+        _animator.SetBool(RunBool, _moveVector == Vector2.left || _moveVector == Vector2.right);
+        ManageKey();
+        Move(_moveVector);
+        Jump();
     }
 
     private void OnCollisionStay2D(Collision2D collider)
     {
-        CountRacycastHits();
+        _grounded = IsGrounded();
     }
 
     private void OnCollisionExit2D(Collision2D collider)
@@ -41,13 +47,34 @@ public class PlayerController : MonoBehaviour
         _grounded = false;
     }
 
-    private void Update()
+    private void ManageKey()
     {
-        _isMoveDirectionLeft = Input.GetKey(_moveLeft);
-        _isMoveDirectionRight = Input.GetKey(_moveRight);        
+        if (Input.GetKeyDown(_moveLeft))
+        {
+            _spriteRenderer.flipX = true;
+            _moveVector = Vector2.left;
+        }
+
+        if (Input.GetKeyDown(_moveRight))
+        {
+            _spriteRenderer.flipX = false;
+            _moveVector = Vector2.right;
+        }
+
+        if (Input.GetKeyUp(_moveLeft) || Input.GetKeyUp(_moveRight))
+            _moveVector = Vector2.zero;
     }
 
-    private void CountRacycastHits()
+    private void Jump()
+    {
+        if (Input.GetKeyDown(_jump) && _grounded)
+        {
+            _animator.SetTrigger(JumpTrigger);
+            _rb2d.velocity += _jumpSpeed * Vector2.up;
+        }
+    }
+
+    private bool IsGrounded()
     {
         RaycastHit2D[] hits;
 
@@ -56,35 +83,11 @@ public class PlayerController : MonoBehaviour
 
         if (hits.Length > 0)
         {
-            _grounded = true;
+            return true;            
         }
-    }
-
-    private IEnumerator ManageActions()
-    {
-        while (true)
+        else
         {
-            _animator.SetBool(RunBool, _isMoveDirectionLeft || _isMoveDirectionRight);
-
-            if (_isMoveDirectionLeft)
-            {
-                _spriteRenderer.flipX = true;
-                Move(Vector2.left);
-            }
-
-            if (_isMoveDirectionRight)
-            {
-                _spriteRenderer.flipX = false;
-                Move(Vector2.right);
-            }
-
-            if (Input.GetKeyDown(_jump) && _grounded)
-            {
-                _animator.SetTrigger(JumpTrigger);
-                _rb2d.velocity += _jumpSpeed * Vector2.up;
-            }
-
-            yield return null;
+            return false;
         }
     }
 
