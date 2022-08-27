@@ -28,6 +28,7 @@ public class GemSpawner : MonoBehaviour
 
         _timer += Time.deltaTime;
     }
+
     private void SpawnGem()
     {
         int randomIndex = _random.Next(0, _spawnPoints.Length - 1);
