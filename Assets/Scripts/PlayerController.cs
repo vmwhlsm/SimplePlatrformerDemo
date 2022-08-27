@@ -16,7 +16,8 @@ public class PlayerController : MonoBehaviour
     private const string RunBool = "Run";
     private Vector2 _moveVector;
     private Rigidbody2D _rb2d;
-    private float _speed = 0.25f;
+    private float _raycastLength = 0.01f;
+    private float _speed = 0.02f;
     private float _jumpSpeed = 10f;
     private bool _grounded;
     private Animator _animator;
@@ -79,7 +80,7 @@ public class PlayerController : MonoBehaviour
         RaycastHit2D[] hits;
 
         Vector2 positionToCheck = transform.position;
-        hits = Physics2D.RaycastAll(positionToCheck, Vector2.down, 0.01f);
+        hits = Physics2D.RaycastAll(positionToCheck, Vector2.down, _raycastLength);
 
         if (hits.Length > 0)
         {

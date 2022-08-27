@@ -13,7 +13,7 @@ public class Enemy : MonoBehaviour
     private Rigidbody2D _rb2d;
     private float _reachDistance = 0.05f;
     private SpriteRenderer _spriteRenderer;
-    private float _speed = 0.25f;
+    private float _speed = 0.02f;
     private Vector3 _activePoint;
 
     private void Start()
