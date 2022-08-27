@@ -10,7 +10,6 @@ public class Enemy : MonoBehaviour
     [SerializeField] private Transform _targetPoint1;
     [SerializeField] private Transform _targetPoint2;
 
-    private Rigidbody2D _rb2d;
     private float _reachDistance = 0.05f;
     private SpriteRenderer _spriteRenderer;
     private float _speed = 0.02f;
